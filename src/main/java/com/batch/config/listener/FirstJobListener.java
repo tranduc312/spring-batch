@@ -14,17 +14,17 @@ public class FirstJobListener implements JobExecutionListener
 	@Override
 	public void beforeJob(JobExecution jobExecution)
 	{
-		System.out.println("Before job: " + jobExecution.getJobInstance().getJobName());
-		System.out.println("jobExecution.getJobParameters(): " + jobExecution.getJobParameters());
-		System.out.println("jobExecution.getExecutionContext(): " + jobExecution.getExecutionContext());
+		logger.info("Before job: {}", jobExecution.getJobInstance().getJobName());
+		logger.info("jobExecution.getJobParameters(): {}", jobExecution.getJobParameters());
+		logger.info("jobExecution.getExecutionContext(): {}", jobExecution.getExecutionContext());
 		jobExecution.getExecutionContext().put("a", "b");
 	}
 
 	@Override
 	public void afterJob(JobExecution jobExecution)
 	{
-		System.out.println("After job: " + jobExecution.getJobInstance().getJobName());
-		System.out.println("jobExecution.getJobParameters(): " + jobExecution.getJobParameters());
-		System.out.println("jobExecution.getExecutionContext(): " + jobExecution.getExecutionContext());
+		logger.info("After job: {}",  jobExecution.getJobInstance().getJobName());
+		logger.info("jobExecution.getJobParameters(): {}", jobExecution.getJobParameters());
+		logger.info("jobExecution.getExecutionContext(): {}", jobExecution.getExecutionContext());
 	}
 }

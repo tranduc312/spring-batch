@@ -20,6 +20,7 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 
@@ -54,7 +55,7 @@ public class SampleJob
 	private FirstItemWriter firstItemWriter;
 
 
-//	@Bean
+	@Bean(name = "firstJob")
 	public Job firstJob() {
 		return new JobBuilder(Constant.Job.FIRST_JOB, jobRepository)
 				.incrementer(new RunIdIncrementer())
@@ -64,7 +65,7 @@ public class SampleJob
 				.build();
 	}
 
-	@Bean
+	@Bean(name = "secondJob")
 	public Job secondJob() {
 		return new JobBuilder("Second Job", jobRepository)
 				.incrementer(new RunIdIncrementer())
@@ -87,17 +88,18 @@ public class SampleJob
 
 	private Step firstChunkStep() {
 		return new StepBuilder("first Chunk Step", jobRepository)
-				.<Integer, Long>chunk(3, transactionManager)
+				.<Integer, Integer>chunk(3, transactionManager)
 				.reader(firstItemReader)
-				.processor(firstItemProcessor)
+//				.processor(firstItemProcessor)
 				.writer(firstItemWriter)
+				.listener(firstStepListener)
 				.build();
 	}
 
 	private Tasklet firstTask() {
 		return (contribution, chunkContext) -> {
 			logger.info("contribution.getClass() {} ", contribution.getClass());
-			System.err.println("this is first tasklet step");
+			logger.info("this is first tasklet step");
 			return RepeatStatus.FINISHED;
 		};
 	}
@@ -105,7 +107,7 @@ public class SampleJob
 	private Tasklet secondTask() {
 		return (contribution, chunkContext) -> {
 			logger.info("contribution.getClass() {} ", contribution.getClass());
-			System.err.println("this is second tasklet step");
+			logger.info("this is second tasklet step");
 			return RepeatStatus.FINISHED;
 		};
 	}
@@ -113,7 +115,7 @@ public class SampleJob
 	private Tasklet thirdTask() {
 		return (contribution, chunkContext) -> {
 			logger.info("contribution.getClass() {} ", chunkContext.getStepContext());
-			System.err.println("this is third tasklet step");
+			logger.info("this is third tasklet step");
 			return RepeatStatus.FINISHED;
 		};
 	}

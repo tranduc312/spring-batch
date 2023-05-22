@@ -1,5 +1,7 @@
 package com.batch.reader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
@@ -13,13 +15,15 @@ import java.util.List;
 public class FirstItemReader implements ItemReader<Integer>
 {
 
+	private final Logger logger = LoggerFactory.getLogger(FirstItemReader.class);
+
 	List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 	int i = 0;
 
 	@Override
 	public Integer read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException
 	{
-		System.out.println("Item Reader");
+		logger.info("Item Reader");
 		Integer item;
 		if (i < list.size()) {
 			item = list.get(i++);

@@ -1,5 +1,6 @@
 package com.batch.config;
 
+import com.batch.StudentCsv;
 import com.batch.config.listener.FirstJobListener;
 import com.batch.config.listener.FirstStepListener;
 import com.batch.config.step.SecondStep;
@@ -16,12 +17,20 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.item.file.transform.LineTokenizer;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import java.io.File;
 
 
 @Configuration
@@ -88,8 +97,8 @@ public class SampleJob
 
 	private Step firstChunkStep() {
 		return new StepBuilder("first Chunk Step", jobRepository)
-				.<Integer, Integer>chunk(3, transactionManager)
-				.reader(firstItemReader)
+				.<StudentCsv, StudentCsv>chunk(3, transactionManager)
+				.reader(flatFileItemReader())
 //				.processor(firstItemProcessor)
 				.writer(firstItemWriter)
 				.listener(firstStepListener)
@@ -102,5 +111,25 @@ public class SampleJob
 			logger.info("this is first tasklet step");
 			return RepeatStatus.FINISHED;
 		};
+	}
+
+	public FlatFileItemReader<StudentCsv> flatFileItemReader() {
+		FlatFileItemReader<StudentCsv> flatFileItemReader = new FlatFileItemReader<>();
+
+		flatFileItemReader.setResource(new FileSystemResource(
+				new File("D:\\Study\\Java\\Udemy\\Spring-batch\\students.csv")));
+		flatFileItemReader.setLineMapper(new DefaultLineMapper<StudentCsv>() {
+			{
+				setLineTokenizer(new DelimitedLineTokenizer(){{
+					setNames("ID", "First Name", "Last Name", "Email");
+				}});
+				setFieldSetMapper(new BeanWrapperFieldSetMapper<>(){{
+					setTargetType(StudentCsv.class);
+				}});
+			}
+		});
+		flatFileItemReader.setLinesToSkip(1);
+
+		return flatFileItemReader;
 	}
 }

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-@ComponentScan("com.batch.config")
+@ComponentScan({"com.batch.config","com.batch.reader","com.batch.processor","com.batch.writer"})
 public class SpringBatchApplication {
 
 	public static void main(String[] args) {

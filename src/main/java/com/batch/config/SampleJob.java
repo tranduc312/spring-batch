@@ -103,20 +103,4 @@ public class SampleJob
 			return RepeatStatus.FINISHED;
 		};
 	}
-
-	private Tasklet secondTask() {
-		return (contribution, chunkContext) -> {
-			logger.info("contribution.getClass() {} ", contribution.getClass());
-			logger.info("this is second tasklet step");
-			return RepeatStatus.FINISHED;
-		};
-	}
-
-	private Tasklet thirdTask() {
-		return (contribution, chunkContext) -> {
-			logger.info("contribution.getClass() {} ", chunkContext.getStepContext());
-			logger.info("this is third tasklet step");
-			return RepeatStatus.FINISHED;
-		};
-	}
 }

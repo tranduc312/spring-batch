@@ -9,6 +9,7 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
@@ -37,6 +38,9 @@ public class JobServiceImpl implements JobService
 	@Qualifier("secondJob")
 	private Job secondJob;
 
+	@Autowired
+	private JobOperator jobOperator;
+
 
 	@Async
 	@Override
@@ -59,6 +63,17 @@ public class JobServiceImpl implements JobService
 			logger.info("Job Execution ID = {}", jobExecution.getJobId());
 		} catch (Exception e) {
 			logger.error("Exception while starting job");
+		}
+	}
+
+	@Override
+	public void stop(Long executionId)
+	{
+		try
+		{
+			jobOperator.stop(executionId);
+		} catch (Exception e) {
+			logger.error("Exception while stopped job");
 		}
 	}
 }

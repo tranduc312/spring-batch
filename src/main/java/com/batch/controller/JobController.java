@@ -3,6 +3,7 @@ package com.batch.controller;
 import com.batch.request.JobParamRequest;
 import com.batch.service.Impl.JobServiceImpl;
 import com.batch.service.JobService;
+import org.springframework.batch.core.launch.JobOperator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,5 +24,11 @@ public class JobController
 	{
 		jobService.startJob(jobName, jobParamRequestList);
 		return "Job Start...";
+	}
+
+	@GetMapping("/stop/{executionId}")
+	public String stopJob(@PathVariable Long executionId) {
+		jobService.stop(executionId);
+		return "Job Stopped...";
 	}
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<students>
+    <student>
+        <id>1</id>
+        <firstName>a</firstName>
+        <lastName>b</lastName>
+        <email>ab@email.com</email>
+    </student>
+    <student>
+        <id>2</id>
+        <firstName>c</firstName>
+        <lastName>d</lastName>
+        <email>cd@email.com</email>
+    </student>
+    <student>
+        <id>3</id>
+        <firstName>e</firstName>
+        <lastName>f</lastName>
+        <email>ef@email.com</email>
+    </student>
+    <student>
+        <id>4</id>
+        <firstName>g</firstName>
+        <lastName>h</lastName>
+        <email>gh@email.com</email>
+    </student>
+</students>

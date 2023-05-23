@@ -2,6 +2,7 @@ package com.batch.writer;
 
 import com.batch.model.StudentCsv;
 import com.batch.model.StudentJson;
+import com.batch.model.StudentXml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.Chunk;

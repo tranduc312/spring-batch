@@ -1,5 +1,6 @@
 package com.batch.config;
 
+import com.batch.config.listener.SkipListener;
 import com.batch.model.StudentCsv;
 import com.batch.config.listener.FirstJobListener;
 import com.batch.config.listener.FirstStepListener;
@@ -20,6 +21,7 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.core.step.skip.AlwaysSkipItemSkipPolicy;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -73,6 +75,8 @@ public class SampleJob
 	@Autowired
 	private FirstItemWriter firstItemWriter;
 
+	@Autowired
+	private SkipListener skipListener;
 
 	@Bean(name = "firstJob")
 	public Job firstJob() {
@@ -114,6 +118,13 @@ public class SampleJob
 //				.processor(firstItemProcessor)
 				.writer(firstItemWriter)
 				.listener(firstStepListener)
+				.faultTolerant()
+				.skip(Throwable.class)
+				.skipLimit(100)
+//				.skipPolicy(new AlwaysSkipItemSkipPolicy())
+				.retryLimit(1)
+				.retry(Throwable.class)
+				.listener(skipListener)
 				.build();
 	}
 
